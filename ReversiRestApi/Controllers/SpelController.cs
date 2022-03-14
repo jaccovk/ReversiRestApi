@@ -77,15 +77,24 @@ namespace ReversiRestApi.Controllers
         public void PlaatsZet(int kolomZet, int rijZet, string spelToken, string spelerToken )
         {
             Spel spel = iRepository.GetSpel(spelToken);
-            spel.DoeZet(rijZet,kolomZet);
+            spel.DoeZet(rijZet,kolomZet);//SNAP IK NIEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEET
+        }
+
+        //PUT api/spel/Pas
+        [HttpPut("{spelToken,spelerToken}")]
+        public void PasDeBeurt(string spelToken, string spelerToken)
+        {
+            Spel spel = iRepository.GetSpel(spelToken); 
+            spel.Pas();
+
         }
 
         //PUT api/spel/opgeven
         [HttpPut("{spelToken,spelerToken}")]
         public void GeefOp(string spelToken, string spelerToken)
         {
-            Spel spel = iRepository.GetSpel(spelToken);
-            //spel.Opgeven();
+            Spel spel = iRepository.GetSpel(spelToken); 
+            spel.Opgeven();
 
         }
 

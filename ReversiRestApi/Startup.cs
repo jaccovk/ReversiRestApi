@@ -9,9 +9,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using ReversiRestApi.IRepository;
+using Microsoft.OpenApi.Models;
 using ReversiRestApi.Repository;
 
 namespace ReversiRestApi
@@ -30,11 +33,25 @@ namespace ReversiRestApi
         {
 
             services.AddControllers();
+            services.AddTransient<ISpelRepository, SpelRepository>();
+            /*services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost", "https://localhost:55221")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });*/
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ReversiRestApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "MyTestService", Version = "v1",});
             });
-            services.AddTransient<ISpelRepository, SpelRepository>();
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,15 +60,22 @@ namespace ReversiRestApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ReversiRestApi v1"));
             }
+
+            app.UseSwagger();
+
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("./v1/swagger.json", "My API V1"); //originally "./swagger/v1/swagger.json"
+                });
+            
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {

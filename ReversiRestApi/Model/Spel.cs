@@ -58,7 +58,10 @@ namespace ReversieISpelImplementatie.Model
             AandeBeurt = Kleur.Geen;
         }
 
-
+        public void Opgeven()
+        {
+            //nog invullen
+        }
         public void Pas()
         {
             // controleeer of er geen zet mogelijk is voor de speler die wil passen, alvorens van beurt te wisselen.
