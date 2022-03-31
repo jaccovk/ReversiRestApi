@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
+using Newtonsoft.Json;
+using System.Web;
 
 namespace ReversieISpelImplementatie.Model
 {
@@ -22,23 +27,25 @@ namespace ReversieISpelImplementatie.Model
                                 {  1, -1 },         // naar linksonder
                                 { -1,  1 },         // naar rechtsboven
                                 { -1, -1 } };       // naar linksboven
-
+        [Key]
         public int ID { get; set; }
         public string Omschrijving { get; set; }
         public string Token { get; set; }
         public string Speler1Token { get; set; }
         public string Speler2Token { get; set; }
 
-        private Kleur[,] bord;
-        public Kleur[,] Bord
+        [NotMapped]
+        public Kleur[,] Bord { get; set; }
+
+        public string BordString
         {
             get
             {
-                return bord;
+                return JsonConvert.SerializeObject(Bord);//je maakt er een string van
             }
             set
             {
-                bord = value;
+                Bord = JsonConvert.DeserializeObject<Kleur[,]>(value);//je zet het om van een string naar een object
             }
         }
 
@@ -85,9 +92,9 @@ namespace ReversieISpelImplementatie.Model
             {
                 for (int kolomZet = 0; kolomZet < bordOmvang; kolomZet++)
                 {
-                    if (bord[rijZet, kolomZet] == Kleur.Wit)
+                    if (Bord[rijZet, kolomZet] == Kleur.Wit)
                         aantalWit++;
-                    else if (bord[rijZet, kolomZet] == Kleur.Zwart)
+                    else if (Bord[rijZet, kolomZet] == Kleur.Zwart)
                         aantalZwart++;
                 }
             }

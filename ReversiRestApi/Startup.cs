@@ -13,8 +13,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ReversiRestApi.IRepository;
 using Microsoft.OpenApi.Models;
+using ReversiRestApi.DAL;
 using ReversiRestApi.Repository;
 
 namespace ReversiRestApi
@@ -28,28 +30,21 @@ namespace ReversiRestApi
 
         public IConfiguration Configuration { get; }
 
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
             services.AddControllers();
-            services.AddTransient<ISpelRepository, SpelRepository>();
-            /*services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.WithOrigins("http://localhost", "https://localhost:55221")
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                    });
-            });*/
-
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "MyTestService", Version = "v1",});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rest_Api_EF", Version = "v1" });
             });
 
+            services.AddScoped<ISpelRepository, SpelAccessLayer>();//Deze is nodig om dependency injection: Blijft bestaan tijdens een request
+            services.AddMvc().AddNewtonsoftJson();
+            services.AddDbContext<SpelDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Database")));
+            
 
 
         }
@@ -60,22 +55,15 @@ namespace ReversiRestApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rest_Api_EF v1"));
             }
-
-            app.UseSwagger();
-
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("./v1/swagger.json", "My API V1"); //originally "./swagger/v1/swagger.json"
-                });
-            
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
-            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {

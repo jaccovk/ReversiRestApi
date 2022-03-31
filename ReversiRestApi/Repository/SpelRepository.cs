@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ReversieISpelImplementatie.Model;
 using ReversiRestApi.IRepository;
@@ -25,7 +26,7 @@ namespace ReversiRestApi.Repository
             spel3.Omschrijving = "Na dit spel wil ik er nog een paar spelen tegen zelfde tegenstander";
 
 
-            Spellen = new List<Spel> {spel1, spel2, spel3};
+            Spellen = new List<Spel> { spel1, spel2, spel3 };
         }
 
         public void AddSpel(Spel spel)
@@ -40,13 +41,18 @@ namespace ReversiRestApi.Repository
 
         public Spel GetSpel_BySpelerToken(string spelerToken)
         {
-            Spel spel = Spellen.Single(x => x.Speler1Token == spelerToken);
-            return spel;
+            try
+            {
+                return Spellen.Single(x => x.Speler1Token == spelerToken);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception();
+            }
         }
         public Spel GetSpel(string spelToken)
         {
-            Spel spel = Spellen.Single(x => x.Token == spelToken);
-            return spel;
+            return Spellen.Single(x => x.Token == spelToken);
         }
 
 

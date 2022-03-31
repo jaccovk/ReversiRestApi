@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ReversieISpelImplementatie.Model;
 using ReversiRestApi.IRepository;
 using ReversiRestApi.Repository;
@@ -25,28 +26,32 @@ namespace ReversiRestApi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get_Spel_Omschrijvingen_Van_Spellen_Met_Wachtende_Speler()
         {
-            return iRepository.SpellenInDeWacht().Select(a => a.Omschrijving).ToList();
+            var spellen = iRepository.GetSpellen()
+                .Where(s => s.Speler2Token == null)
+                .Select(s => new { s.ID, s.Token, s.Omschrijving });
+            return Ok(JsonConvert.SerializeObject(spellen));
+
         }
 
 
-        //GET api/spel/spelToken
-        [HttpGet("{spelToken}")]
-        public Spel GetSpel(string spelToken)
+        //GET api/spel/spelTokens
+        [HttpGet("getSpel")]
+        public Spel GetSpel([FromHeader(Name = "x-speltoken")]string spelToken)
         {
             return iRepository.GetSpel(spelToken);
         }
 
 
         //GET api/spel/spelerToken
-        [HttpGet("{spelerToken}")]
-        public Spel GetSpel_ByPlayerToken(string spelerToken)
+        [HttpGet("getSpelerToken")]
+        public Spel GetSpel_ByPlayerToken([FromHeader(Name = "x-spelertoken")]string spelerToken)
         {
             return iRepository.GetSpel_BySpelerToken(spelerToken);
         }
 
 
         //GET api/Spel
-        [HttpGet]
+        [HttpGet("getSpellen")]
         public List<Spel> WaitForSpelers()
         {
             return iRepository.SpellenInDeWacht();
@@ -54,34 +59,36 @@ namespace ReversiRestApi.Controllers
 
 
         //GET api/Spel/Beurt
-        [HttpGet("{spelToken}")]
-        public Kleur GetKleur(string spelToken)
+        [HttpGet("getKleur")]
+        public Kleur GetKleur([FromHeader(Name = "x-speltoken")]string spelToken)
         {
             Spel spel = iRepository.GetSpel(spelToken);
             return spel.AandeBeurt;
         }
 
         // POST nieuw spel maken
-        [HttpPost("{spelerToken, omschrijving}")]
-        public void CreateSpel(string spelerToken, string omschrijving)
+        [HttpPost("createGame")]
+        public IActionResult CreateSpel([FromHeader(Name ="x-spelertoken")]string spelerToken, [FromBody]string omschrijving)
         {
             iRepository.AddSpel(new Spel()
             {
                 Speler1Token = spelerToken,
                 Omschrijving = omschrijving,
             });
+            return Ok();
         }
 
         // PUT api/Spel/Zet
-        [HttpPut("{kolomZet, rijZet}")]
-        public void PlaatsZet(int kolomZet, int rijZet, string spelToken, string spelerToken )
+        [HttpPut("Zet")]
+        public void PlaatsZet(int kolomZet, int rijZet, string spelToken, string spelerToken, bool pas)
         {
             Spel spel = iRepository.GetSpel(spelToken);
-            spel.DoeZet(rijZet,kolomZet);//SNAP IK NIEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEET
+            if (pas) spel.Pas();
+            else spel.DoeZet(rijZet,kolomZet);
         }
 
         //PUT api/spel/Pas
-        [HttpPut("{spelToken,spelerToken}")]
+        [HttpPut("pasBeurt/{spelToken}/{spelerToken}")]
         public void PasDeBeurt(string spelToken, string spelerToken)
         {
             Spel spel = iRepository.GetSpel(spelToken); 
@@ -90,7 +97,7 @@ namespace ReversiRestApi.Controllers
         }
 
         //PUT api/spel/opgeven
-        [HttpPut("{spelToken,spelerToken}")]
+        [HttpPut("geefOP/{spelToken}/{spelerToken}")]
         public void GeefOp(string spelToken, string spelerToken)
         {
             Spel spel = iRepository.GetSpel(spelToken); 
