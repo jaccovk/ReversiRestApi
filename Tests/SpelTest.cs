@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using ReversiRestApi.Controllers;
 using ReversiRestApi.Repository;
+using ReversiRestApi.DAL;
 
 namespace Tests
 {
@@ -15,6 +16,7 @@ namespace Tests
         // Zwart = 2
 
         private SpelRepository rep;
+        private SpelDbContext _context;
 
         [SetUp]
         public void SetUp()
@@ -25,7 +27,7 @@ namespace Tests
         [Test]
         public void SpelController_New_Spel()
         {
-            SpelController controller = new SpelController(rep);
+            SpelController controller = new SpelController(rep, _context);
             Assert.AreEqual(rep.Spellen.Count,3);
             controller.CreateSpel("kaas","DON'T touch my ChugJug");
             Assert.AreEqual(rep.Spellen.Count, 4);
@@ -55,7 +57,7 @@ namespace Tests
         [Test]
         public void SpelRepo_GetSpel_byPlayerToken()
         {
-            SpelController controller = new SpelController(rep);
+            SpelController controller = new SpelController(rep, _context);
             Spel spel = new Spel();
             spel.Speler1Token = "kaas";
             spel.Omschrijving = "donders lelijk ventje";
@@ -67,7 +69,7 @@ namespace Tests
         [Test]
         public void SpelRepo_GetSpel()
         {
-            SpelController controller = new SpelController(rep);
+            SpelController controller = new SpelController(rep, _context);
             Spel spel = new Spel();
             spel.Speler1Token = "kaas";
             spel.Omschrijving = "donders lelijk ventje";

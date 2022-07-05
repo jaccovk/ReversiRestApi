@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.JSInterop;
 using Newtonsoft.Json;
-using System.Web;
 
 namespace ReversieISpelImplementatie.Model
 {
-
-
     public class Spel : ISpel
     {
         private const int bordOmvang = 8;
@@ -65,7 +55,7 @@ namespace ReversieISpelImplementatie.Model
             AandeBeurt = Kleur.Geen;
         }
 
-        public void Opgeven()
+        public void Opgeven(string spelerToken)
         {
             //nog invullen
         }
@@ -117,7 +107,7 @@ namespace ReversieISpelImplementatie.Model
             if (ZetMogelijk(rijZet, kolomZet))
             {
                 //plaats de steen op het bord
-                
+
 
                 //wijzig alle stenen van kleur die tussen de eerdergeplaatste- en nieuwgeplaatste stenen liggen
                 for (int i = 0; i < 8; i++)
@@ -131,128 +121,128 @@ namespace ReversieISpelImplementatie.Model
             else throw new Exception($"Zet ({rijZet},{kolomZet}) is niet mogelijk!");
         }
 
-    private static Kleur GetKleurTegenstander(Kleur kleur)
-    {
-        if (kleur == Kleur.Wit)
-            return Kleur.Zwart;
-        else if (kleur == Kleur.Zwart)
-            return Kleur.Wit;
-        else
-            return Kleur.Geen;
-    }
-
-    private bool IsErEenZetMogelijk(Kleur kleur)
-    {
-        if (kleur == Kleur.Geen)
-            throw new Exception("Kleur mag niet gelijk aan Geen zijn!");
-        // controleeer of er een zet mogelijk is voor kleur
-        for (int rijZet = 0; rijZet < bordOmvang; rijZet++)
+        private static Kleur GetKleurTegenstander(Kleur kleur)
         {
-            for (int kolomZet = 0; kolomZet < bordOmvang; kolomZet++)
+            if (kleur == Kleur.Wit)
+                return Kleur.Zwart;
+            else if (kleur == Kleur.Zwart)
+                return Kleur.Wit;
+            else
+                return Kleur.Geen;
+        }
+
+        private bool IsErEenZetMogelijk(Kleur kleur)
+        {
+            if (kleur == Kleur.Geen)
+                throw new Exception("Kleur mag niet gelijk aan Geen zijn!");
+            // controleeer of er een zet mogelijk is voor kleur
+            for (int rijZet = 0; rijZet < bordOmvang; rijZet++)
             {
-                if (ZetMogelijk(rijZet, kolomZet, kleur))
+                for (int kolomZet = 0; kolomZet < bordOmvang; kolomZet++)
                 {
-                    return true;
+                    if (ZetMogelijk(rijZet, kolomZet, kleur))
+                    {
+                        return true;
+                    }
                 }
             }
-        }
-        return false;
-    }
-
-    private bool ZetMogelijk(int rijZet, int kolomZet, Kleur kleur)
-    {
-        // Check of er een richting is waarin een zet mogelijk is. Als dat zo is, return dan true.
-        for (int i = 0; i < 8; i++)
-        {
-            {
-                if (StenenInTeSluitenInOpgegevenRichting(rijZet, kolomZet,
-                                                         kleur,
-                                                         richting[i, 0], richting[i, 1]))
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    private void WisselBeurt()
-    {
-        if (AandeBeurt == Kleur.Wit)
-            AandeBeurt = Kleur.Zwart;
-        else
-            AandeBeurt = Kleur.Wit;
-    }
-
-    private static bool PositieBinnenBordGrenzen(int rij, int kolom)
-    {
-        return (rij >= 0 && rij < bordOmvang &&
-                kolom >= 0 && kolom < bordOmvang);
-    }
-
-    private bool ZetOpBordEnNogVrij(int rijZet, int kolomZet)
-    {
-        // Als op het bord gezet wordt, en veld nog vrij, dan return true, anders false
-        return (PositieBinnenBordGrenzen(rijZet, kolomZet) && Bord[rijZet, kolomZet] == Kleur.Geen);
-    }
-
-    private bool StenenInTeSluitenInOpgegevenRichting(int rijZet, int kolomZet,
-                                                      Kleur kleurZetter,
-                                                      int rijRichting, int kolomRichting)
-    {
-        int rij, kolom;
-        Kleur kleurTegenstander = GetKleurTegenstander(kleurZetter);
-        if (!ZetOpBordEnNogVrij(rijZet, kolomZet))
             return false;
-
-        // Zet rij en kolom op de index voor het eerst vakje naast de zet.
-        rij = rijZet + rijRichting;
-        kolom = kolomZet + kolomRichting;
-
-        int aantalNaastGelegenStenenVanTegenstander = 0;
-        // Zolang Bord[rij,kolom] niet buiten de bordgrenzen ligt, en je in het volgende vakje 
-        // steeds de kleur van de tegenstander treft, ga je nog een vakje verder kijken.
-        // Bord[rij, kolom] ligt uiteindelijk buiten de bordgrenzen, of heeft niet meer de
-        // de kleur van de tegenstander.
-        // N.b.: deel achter && wordt alleen uitgevoerd als conditie daarvoor true is.
-        while (PositieBinnenBordGrenzen(rij, kolom) && Bord[rij, kolom] == kleurTegenstander)
-        {
-            rij += rijRichting;
-            kolom += kolomRichting;
-            aantalNaastGelegenStenenVanTegenstander++;
         }
 
-        // Nu kijk je hoe je geeindigt bent met bovenstaande loop. Alleen
-        // als alle drie onderstaande condities waar zijn, zijn er in de
-        // opgegeven richting stenen in te sluiten.
-        return (PositieBinnenBordGrenzen(rij, kolom) &&
-                Bord[rij, kolom] == kleurZetter &&
-                aantalNaastGelegenStenenVanTegenstander > 0);
-    }
-
-    private bool DraaiStenenVanTegenstanderInOpgegevenRichtingOmIndienIngesloten(int rijZet, int kolomZet,
-                                                                                 Kleur kleurZetter,
-                                                                                 int rijRichting, int kolomRichting)
-    {
-        int rij, kolom;
-        Kleur kleurTegenstander = GetKleurTegenstander(kleurZetter);
-        bool stenenOmgedraaid = false;
-
-        if (StenenInTeSluitenInOpgegevenRichting(rijZet, kolomZet, kleurZetter, rijRichting, kolomRichting))
+        private bool ZetMogelijk(int rijZet, int kolomZet, Kleur kleur)
         {
+            // Check of er een richting is waarin een zet mogelijk is. Als dat zo is, return dan true.
+            for (int i = 0; i < 8; i++)
+            {
+                {
+                    if (StenenInTeSluitenInOpgegevenRichting(rijZet, kolomZet,
+                                                             kleur,
+                                                             richting[i, 0], richting[i, 1]))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private void WisselBeurt()
+        {
+            if (AandeBeurt == Kleur.Wit)
+                AandeBeurt = Kleur.Zwart;
+            else
+                AandeBeurt = Kleur.Wit;
+        }
+
+        private static bool PositieBinnenBordGrenzen(int rij, int kolom)
+        {
+            return (rij >= 0 && rij < bordOmvang &&
+                    kolom >= 0 && kolom < bordOmvang);
+        }
+
+        private bool ZetOpBordEnNogVrij(int rijZet, int kolomZet)
+        {
+            // Als op het bord gezet wordt, en veld nog vrij, dan return true, anders false
+            return (PositieBinnenBordGrenzen(rijZet, kolomZet) && Bord[rijZet, kolomZet] == Kleur.Geen);
+        }
+
+        private bool StenenInTeSluitenInOpgegevenRichting(int rijZet, int kolomZet,
+                                                          Kleur kleurZetter,
+                                                          int rijRichting, int kolomRichting)
+        {
+            int rij, kolom;
+            Kleur kleurTegenstander = GetKleurTegenstander(kleurZetter);
+            if (!ZetOpBordEnNogVrij(rijZet, kolomZet))
+                return false;
+
+            // Zet rij en kolom op de index voor het eerst vakje naast de zet.
             rij = rijZet + rijRichting;
             kolom = kolomZet + kolomRichting;
 
-            // N.b.: je weet zeker dat je niet buiten het bord belandt,
-            // omdat de stenen van de tegenstander ingesloten zijn door
-            // een steen van degene die de zet doet.
-            while (Bord[rij, kolom] == kleurTegenstander)
+            int aantalNaastGelegenStenenVanTegenstander = 0;
+            // Zolang Bord[rij,kolom] niet buiten de bordgrenzen ligt, en je in het volgende vakje 
+            // steeds de kleur van de tegenstander treft, ga je nog een vakje verder kijken.
+            // Bord[rij, kolom] ligt uiteindelijk buiten de bordgrenzen, of heeft niet meer de
+            // de kleur van de tegenstander.
+            // N.b.: deel achter && wordt alleen uitgevoerd als conditie daarvoor true is.
+            while (PositieBinnenBordGrenzen(rij, kolom) && Bord[rij, kolom] == kleurTegenstander)
             {
-                Bord[rij, kolom] = kleurZetter;
                 rij += rijRichting;
                 kolom += kolomRichting;
+                aantalNaastGelegenStenenVanTegenstander++;
             }
-            stenenOmgedraaid = true;
+
+            // Nu kijk je hoe je geeindigt bent met bovenstaande loop. Alleen
+            // als alle drie onderstaande condities waar zijn, zijn er in de
+            // opgegeven richting stenen in te sluiten.
+            return (PositieBinnenBordGrenzen(rij, kolom) &&
+                    Bord[rij, kolom] == kleurZetter &&
+                    aantalNaastGelegenStenenVanTegenstander > 0);
         }
-        return stenenOmgedraaid;
+
+        private bool DraaiStenenVanTegenstanderInOpgegevenRichtingOmIndienIngesloten(int rijZet, int kolomZet,
+                                                                                     Kleur kleurZetter,
+                                                                                     int rijRichting, int kolomRichting)
+        {
+            int rij, kolom;
+            Kleur kleurTegenstander = GetKleurTegenstander(kleurZetter);
+            bool stenenOmgedraaid = false;
+
+            if (StenenInTeSluitenInOpgegevenRichting(rijZet, kolomZet, kleurZetter, rijRichting, kolomRichting))
+            {
+                rij = rijZet + rijRichting;
+                kolom = kolomZet + kolomRichting;
+
+                // N.b.: je weet zeker dat je niet buiten het bord belandt,
+                // omdat de stenen van de tegenstander ingesloten zijn door
+                // een steen van degene die de zet doet.
+                while (Bord[rij, kolom] == kleurTegenstander)
+                {
+                    Bord[rij, kolom] = kleurZetter;
+                    rij += rijRichting;
+                    kolom += kolomRichting;
+                }
+                stenenOmgedraaid = true;
+            }
+            return stenenOmgedraaid;
+        }
     }
-}
 }

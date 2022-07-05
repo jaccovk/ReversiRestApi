@@ -60,7 +60,6 @@ namespace ReversiRestApi.Repository
         {
             return Spellen.Where(spel => spel.Speler2Token == null).ToList();
         }
-
     }
 
 }

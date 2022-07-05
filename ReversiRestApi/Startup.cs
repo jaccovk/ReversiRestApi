@@ -60,6 +60,13 @@ namespace ReversiRestApi
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(options =>
+            {
+                options.AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials();
+            });
 
             app.UseRouting();
 

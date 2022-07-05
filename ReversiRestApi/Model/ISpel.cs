@@ -17,7 +17,7 @@ namespace ReversieISpelImplementatie.Model
         string Speler1Token { get; set; }
         string Speler2Token { get; set; }
 
-        void Opgeven();
+        void Opgeven(string spelerToken);
         Kleur[,] Bord { get; set; }
         Kleur AandeBeurt { get; set; }
         void Pas();
