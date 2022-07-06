@@ -46,9 +46,15 @@ namespace ReversiRestApi.DAL
             return _spelContext.Spel.Where(spellen => spellen.Speler2Token == null).ToList();
         }
 
-        public void SaveChanges()
+        public void UpdateSpel(Spel spel)
         {
-            throw new NotImplementedException();
+            _spelContext.Spel.Update(spel);
+            _spelContext.SaveChanges();
+        }
+        public void DeleteSpel(Spel spel)
+        {
+            _spelContext.Spel.Remove(spel);
+            _spelContext.SaveChanges();
         }
     }
 }

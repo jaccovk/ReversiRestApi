@@ -118,7 +118,7 @@ namespace ReversieISpelImplementatie.Model
                 Bord[rijZet, kolomZet] = AandeBeurt;
                 WisselBeurt();
             }
-            else throw new Exception($"Zet ({rijZet},{kolomZet}) is niet mogelijk!");
+            //else throw new Exception($"Zet ({rijZet},{kolomZet}) is niet mogelijk!");
         }
 
         private static Kleur GetKleurTegenstander(Kleur kleur)

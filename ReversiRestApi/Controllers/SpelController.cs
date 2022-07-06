@@ -18,12 +18,10 @@ namespace ReversiRestApi.Controllers
     public class SpelController : ControllerBase
     {
         private readonly ISpelRepository iRepository;
-        private readonly SpelDbContext _context;
 
-        public SpelController(ISpelRepository repository, SpelDbContext context)
+        public SpelController(ISpelRepository repository)
         {
             iRepository = repository;
-            _context = context;
         }
 
         // GET spel omschrijvingen
@@ -54,16 +52,13 @@ namespace ReversiRestApi.Controllers
         public async Task<Spel> NeemDeelAanSpel([FromBody] SpelDeelnemen neemDeel)
         {
             Debug.WriteLine($"spelToken: {neemDeel.SpelToken}");
-            Spel spel = _context.Spel.FirstOrDefault(s => s.Token == neemDeel.SpelToken);
+            Spel spel = iRepository.GetSpel_BySpelerToken(neemDeel.SpelToken);
             //iRepository.GetSpel(neemDeel.SpelToken);
 
             spel.Speler2Token = neemDeel.SpelerToken;
             spel.AandeBeurt = Kleur.Zwart;
             //set the database
-
-            _context.SaveChanges();
-
-            //iRepository.SaveChanges();
+            iRepository.UpdateSpel(spel);
 
             return spel;
 
@@ -141,8 +136,7 @@ namespace ReversiRestApi.Controllers
                 if (model.Pas) spel.Pas();
                 else spel.DoeZet(model.RijZet, model.KolomZet);
 
-                _context.Update(spel);
-                _context.SaveChanges();
+                iRepository.UpdateSpel(spel);
                 return true;
             }
             return false;
@@ -156,8 +150,9 @@ namespace ReversiRestApi.Controllers
             try
             {
                 spel.Pas();
-                _context.Update(spel);
-                _context.SaveChanges();
+                iRepository.UpdateSpel(spel);
+                /*                _context.Update(spel);
+                                _context.SaveChanges();*/
                 return true;
             }
             catch (Exception e)
@@ -169,16 +164,25 @@ namespace ReversiRestApi.Controllers
         }
 
         //PUT api/spel/opgeven
-        [HttpPut("geefOP/{spelToken}/{spelerToken}")]
-        public void GeefOp(string spelToken, string spelerToken)
+        [HttpPut("geefOp")]
+        public void GeefOp([FromHeader( Name = "x-speltoken")] string spelToken)
         {
-            Spel spel = iRepository.GetSpel(spelToken);
-            spel.Opgeven(spelerToken);
-            _context.Remove(spel);
-            _context.SaveChanges();
+            Debug.WriteLine($"speltoken: {spelToken}");
+            //Spel spel = _context.Spel.Find(spelToken);
+            Spel spel2 = iRepository.GetSpel(spelToken);
+            //spel.Opgeven(spelerToken);
+            //_context.Remove(spel);
+            iRepository.DeleteSpel(spel2);
+            //_context.SaveChanges();
 
         }
-
+        [HttpGet("isAfgelopen")]
+        public bool IsAfgelopen([FromBody]string spelToken)
+        {
+            //Spel spel = _context.Spel.FirstOrDefault(s => s.Token == spelToken);
+            Spel spel = iRepository.GetSpel(spelToken);
+            return spel.Afgelopen();
+        }
 
         /*// DELETE api/<SpelController>/5
         //------------ VOOR DE BEHEERDER ---------------

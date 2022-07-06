@@ -55,6 +55,15 @@ namespace ReversiRestApi.Repository
             return Spellen.Single(x => x.Token == spelToken);
         }
 
+        public void UpdateSpel(Spel spel)
+        {
+            Spellen.Remove(Spellen.Single(x => x.Token == spel.Token));
+            Spellen.Add(spel);
+        }
+
+        public void DeleteSpel(Spel spel){
+            Spellen.Remove(spel);
+        }
 
         public List<Spel> SpellenInDeWacht()
         {
