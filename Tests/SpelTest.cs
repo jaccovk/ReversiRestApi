@@ -27,7 +27,7 @@ namespace Tests
         [Test]
         public void SpelController_New_Spel()
         {
-            SpelController controller = new SpelController(rep, _context);
+            SpelController controller = new SpelController(rep);
             Assert.AreEqual(rep.Spellen.Count,3);
             controller.CreateSpel("kaas","DON'T touch my ChugJug");
             Assert.AreEqual(rep.Spellen.Count, 4);
@@ -57,7 +57,7 @@ namespace Tests
         [Test]
         public void SpelRepo_GetSpel_byPlayerToken()
         {
-            SpelController controller = new SpelController(rep, _context);
+            SpelController controller = new SpelController(rep);
             Spel spel = new Spel();
             spel.Speler1Token = "kaas";
             spel.Omschrijving = "donders lelijk ventje";
@@ -69,7 +69,7 @@ namespace Tests
         [Test]
         public void SpelRepo_GetSpel()
         {
-            SpelController controller = new SpelController(rep, _context);
+            SpelController controller = new SpelController(rep);
             Spel spel = new Spel();
             spel.Speler1Token = "kaas";
             spel.Omschrijving = "donders lelijk ventje";

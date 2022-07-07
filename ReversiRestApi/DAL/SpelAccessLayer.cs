@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Threading.Tasks;
 using Afx.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +56,14 @@ namespace ReversiRestApi.DAL
         public void DeleteSpel(Spel spel)
         {
             _spelContext.Spel.Remove(spel);
-            _spelContext.SaveChanges();
+            try
+            {
+                _spelContext?.SaveChanges();
+            }
+            catch(DbUpdateConcurrencyException e)
+            {
+                Debug.WriteLine(e);
+            }
         }
     }
 }

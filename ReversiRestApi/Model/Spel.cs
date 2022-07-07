@@ -68,7 +68,6 @@ namespace ReversieISpelImplementatie.Model
                 WisselBeurt();
         }
 
-
         public bool Afgelopen()     // return true als geen van de spelers een zet kan doen
         {
             return (!IsErEenZetMogelijk(Kleur.Wit) && !IsErEenZetMogelijk(Kleur.Zwart));

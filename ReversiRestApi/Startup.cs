@@ -1,23 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ReversiRestApi.IRepository;
-using Microsoft.OpenApi.Models;
 using ReversiRestApi.DAL;
-using ReversiRestApi.Repository;
 
 namespace ReversiRestApi
 {
@@ -44,9 +33,6 @@ namespace ReversiRestApi
             services.AddScoped<ISpelRepository, SpelAccessLayer>();//Deze is nodig om dependency injection: Blijft bestaan tijdens een request
             services.AddMvc().AddNewtonsoftJson();
             services.AddDbContext<SpelDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Database")));
-            
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

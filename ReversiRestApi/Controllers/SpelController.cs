@@ -49,10 +49,10 @@ namespace ReversiRestApi.Controllers
 
         //POST
         [HttpPost("neemDeelAanSpel")]
-        public async Task<Spel> NeemDeelAanSpel([FromBody] SpelDeelnemen neemDeel)
+        public Spel NeemDeelAanSpel([FromBody] SpelDeelnemen neemDeel)
         {
             Debug.WriteLine($"spelToken: {neemDeel.SpelToken}");
-            Spel spel = iRepository.GetSpel_BySpelerToken(neemDeel.SpelToken);
+            Spel spel = iRepository.GetSpel(neemDeel.SpelToken);
             //iRepository.GetSpel(neemDeel.SpelToken);
 
             spel.Speler2Token = neemDeel.SpelerToken;
@@ -172,16 +172,26 @@ namespace ReversiRestApi.Controllers
             Spel spel2 = iRepository.GetSpel(spelToken);
             //spel.Opgeven(spelerToken);
             //_context.Remove(spel);
+            Debug.WriteLine($"spel verwijderd: {spelToken}");
             iRepository.DeleteSpel(spel2);
             //_context.SaveChanges();
 
         }
         [HttpGet("isAfgelopen")]
-        public bool IsAfgelopen([FromBody]string spelToken)
+        public bool IsAfgelopen([FromHeader(Name = "x-spelToken")]string spelToken)
         {
-            //Spel spel = _context.Spel.FirstOrDefault(s => s.Token == spelToken);
-            Spel spel = iRepository.GetSpel(spelToken);
-            return spel.Afgelopen();
+            Debug.WriteLine($"speltoken afgelopen: {spelToken}");
+            if (iRepository.GetSpel(spelToken) != null)
+            {
+                Spel spel = iRepository.GetSpel(spelToken);
+                if (spel.Afgelopen() == true)
+                {
+                    iRepository.DeleteSpel(spel);
+                    return true;
+                }
+                return false;
+            }
+            return true;
         }
 
         /*// DELETE api/<SpelController>/5

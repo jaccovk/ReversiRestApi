@@ -45,14 +45,21 @@ namespace ReversiRestApi.Repository
             {
                 return Spellen.Single(x => x.Speler1Token == spelerToken);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new Exception();
             }
         }
         public Spel GetSpel(string spelToken)
         {
-            return Spellen.Single(x => x.Token == spelToken);
+            try
+            {
+                return Spellen.Single(x => x.Token == spelToken);
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
 
         public void UpdateSpel(Spel spel)
