@@ -163,7 +163,7 @@ namespace ReversiRestApi.Controllers
 
         }
 
-        //PUT api/spel/opgeven
+/*        //PUT api/spel/opgeven
         [HttpPut("geefOp")]
         public void GeefOp([FromHeader( Name = "x-speltoken")] string spelToken)
         {
@@ -175,13 +175,14 @@ namespace ReversiRestApi.Controllers
             Debug.WriteLine($"spel verwijderd: {spelToken}");
             iRepository.DeleteSpel(spel2);
             //_context.SaveChanges();
+        }*/
 
-        }
+
         [HttpGet("isAfgelopen")]
         public bool IsAfgelopen([FromHeader(Name = "x-spelToken")]string spelToken)
         {
             Debug.WriteLine($"speltoken afgelopen: {spelToken}");
-            if (iRepository.GetSpel(spelToken) != null)
+            if (iRepository?.GetSpel(spelToken) != null)
             {
                 Spel spel = iRepository.GetSpel(spelToken);
                 if (spel.Afgelopen() == true)
@@ -191,7 +192,7 @@ namespace ReversiRestApi.Controllers
                 }
                 return false;
             }
-            return true;
+            else return true;
         }
 
         /*// DELETE api/<SpelController>/5
