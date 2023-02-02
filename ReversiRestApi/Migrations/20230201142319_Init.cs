@@ -2,7 +2,7 @@
 
 namespace ReversiRestApi.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,6 +16,7 @@ namespace ReversiRestApi.Migrations
                     Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Speler1Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Speler2Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Afgelopen = table.Column<bool>(type: "bit", nullable: false),
                     BordString = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AandeBeurt = table.Column<int>(type: "int", nullable: false)
                 },

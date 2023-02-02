@@ -23,6 +23,7 @@ namespace ReversieISpelImplementatie.Model
         public string Token { get; set; }
         public string Speler1Token { get; set; }
         public string Speler2Token { get; set; }
+        public bool Afgelopen { get; set; } = false;
 
         [NotMapped]
         public Kleur[,] Bord { get; set; }
@@ -68,9 +69,9 @@ namespace ReversieISpelImplementatie.Model
                 WisselBeurt();
         }
 
-        public bool Afgelopen()     // return true als geen van de spelers een zet kan doen
+        public bool IsAfgelopen()     // return true als geen van de spelers een zet kan doen
         {
-            return (!IsErEenZetMogelijk(Kleur.Wit) && !IsErEenZetMogelijk(Kleur.Zwart));
+            return (!IsErEenZetMogelijk(Kleur.Wit) && !IsErEenZetMogelijk(Kleur.Zwart)) || Afgelopen;
         }
 
         public Kleur OverwegendeKleur()

@@ -1619,7 +1619,7 @@ namespace Tests
             // 7   1 1 1 1 1 1 1 1
             // Act
             spel.AandeBeurt = Kleur.Wit;
-            var actual = spel.Afgelopen();
+            var actual = spel.IsAfgelopen();
             // Assert
             Assert.IsTrue(actual);
         }
@@ -1706,7 +1706,7 @@ namespace Tests
             // 7   1 1 1 1 1 1 1 1
             // Act
             spel.AandeBeurt = Kleur.Wit;
-            var actual = spel.Afgelopen();
+            var actual = spel.IsAfgelopen();
             // Assert
             Assert.IsTrue(actual);
         }
@@ -1729,7 +1729,7 @@ namespace Tests
             //                     
             // Act
             spel.AandeBeurt = Kleur.Wit;
-            var actual = spel.Afgelopen();
+            var actual = spel.IsAfgelopen();
             // Assert
             Assert.IsFalse(actual);
         }

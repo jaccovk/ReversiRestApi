@@ -9,8 +9,8 @@ using ReversiRestApi.DAL;
 namespace ReversiRestApi.Migrations
 {
     [DbContext(typeof(SpelDbContext))]
-    [Migration("20220329120928_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230201142319_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,6 +29,9 @@ namespace ReversiRestApi.Migrations
 
                     b.Property<int>("AandeBeurt")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Afgelopen")
+                        .HasColumnType("bit");
 
                     b.Property<string>("BordString")
                         .HasColumnType("nvarchar(max)");

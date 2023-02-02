@@ -16,12 +16,13 @@ namespace ReversieISpelImplementatie.Model
         string Token { get; set; }
         string Speler1Token { get; set; }
         string Speler2Token { get; set; }
+        bool Afgelopen { get; set; }
 
         void Opgeven(string spelerToken);
         Kleur[,] Bord { get; set; }
         Kleur AandeBeurt { get; set; }
         void Pas();
-        bool Afgelopen();
+        bool IsAfgelopen();
 
         //welke kleur het meest voorkomend op het speelbord
         Kleur OverwegendeKleur();

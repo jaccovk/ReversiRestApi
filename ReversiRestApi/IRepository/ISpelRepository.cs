@@ -13,7 +13,7 @@ namespace ReversiRestApi.IRepository
         Spel GetSpel(string spelToken);
 
         public List<Spel> SpellenInDeWacht();
-        void DeleteSpel(Spel spel2);
+        void DeleteSpel(Spel spel);
         void UpdateSpel(Spel spel);
     }
 }

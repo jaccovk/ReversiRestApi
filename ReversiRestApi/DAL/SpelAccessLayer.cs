@@ -55,14 +55,17 @@ namespace ReversiRestApi.DAL
         }
         public void DeleteSpel(Spel spel)
         {
-            _spelContext.Spel.Remove(spel);
-            try
+            if (spel != null)
             {
-                _spelContext?.SaveChanges();
-            }
-            catch(DbUpdateConcurrencyException e)
-            {
-                Debug.WriteLine(e);
+                _spelContext.Spel.Remove(spel);
+                try
+                {
+                    _spelContext?.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException e)
+                {
+                    Debug.WriteLine(e);
+                }
             }
         }
     }

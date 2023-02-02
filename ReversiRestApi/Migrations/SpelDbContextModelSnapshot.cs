@@ -28,6 +28,9 @@ namespace ReversiRestApi.Migrations
                     b.Property<int>("AandeBeurt")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Afgelopen")
+                        .HasColumnType("bit");
+
                     b.Property<string>("BordString")
                         .HasColumnType("nvarchar(max)");
 
