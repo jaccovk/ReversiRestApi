@@ -23,8 +23,9 @@ namespace ReversiRestApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<SpelDbContext>(options => 
+            options.UseSqlite(Configuration.GetConnectionString("SqliteConnection")));
 
-            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rest_Api_EF", Version = "v1" });
@@ -32,8 +33,9 @@ namespace ReversiRestApi
 
             services.AddScoped<ISpelRepository, SpelAccessLayer>();//Deze is nodig om dependency injection: Blijft bestaan tijdens een request
             services.AddMvc().AddNewtonsoftJson();
-            services.AddDbContext<SpelDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Database")));
+            services.AddControllers();
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
