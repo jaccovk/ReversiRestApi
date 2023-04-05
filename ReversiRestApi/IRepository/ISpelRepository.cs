@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using ReversieISpelImplementatie.Model;
+﻿using ReversieISpelImplementatie.Model;
+using System.Collections.Generic;
 
 namespace ReversiRestApi.IRepository
 {

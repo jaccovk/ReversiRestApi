@@ -1,15 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using ReversieISpelImplementatie.Model;
+using ReversiRestApi.IRepository;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.AccessControl;
-using System.Threading.Tasks;
-using Afx.Data;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using ReversieISpelImplementatie.Model;
-using ReversiRestApi.IRepository;
 
 namespace ReversiRestApi.DAL
 {

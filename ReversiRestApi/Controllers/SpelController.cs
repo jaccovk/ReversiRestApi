@@ -1,13 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using ReversieISpelImplementatie.Model;
+using ReversiRestApi.IRepository;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using ReversieISpelImplementatie.Model;
-using ReversiRestApi.DAL;
-using ReversiRestApi.IRepository;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -103,7 +101,7 @@ namespace ReversiRestApi.Controllers
         {
             return iRepository.SpellenInDeWacht();
         }
-        
+
         //GET api/Spel
         [HttpGet("getSpellenBySpelerToken")]
         public List<Spel> WaitForSpelers([FromHeader(Name = "x-spelertoken")] string spelerToken)

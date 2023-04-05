@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ReversieISpelImplementatie.Model;
+using ReversiRestApi.IRepository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ReversieISpelImplementatie.Model;
-using ReversiRestApi.IRepository;
 
 namespace ReversiRestApi.Repository
 {
@@ -56,7 +56,7 @@ namespace ReversiRestApi.Repository
             {
                 return Spellen.Single(x => x.Token == spelToken);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return null;
             }
@@ -68,7 +68,8 @@ namespace ReversiRestApi.Repository
             Spellen.Add(spel);
         }
 
-        public void DeleteSpel(Spel spel){
+        public void DeleteSpel(Spel spel)
+        {
             Spellen.Remove(spel);
         }
 
